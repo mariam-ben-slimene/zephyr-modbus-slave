@@ -1,0 +1,11 @@
+:name: ModbusSlave-nRF52840
+
+$bin = @/home/mariem/zephyrproject/zephyr-modbus-slave/build_renode/zephyr/zephyr.elf
+
+mach create
+machine LoadPlatformDescription @platforms/boards/nrf52840dk_nrf52840.repl
+sysbus LoadELF $bin
+
+showAnalyzer sysbus.uart0
+
+start
