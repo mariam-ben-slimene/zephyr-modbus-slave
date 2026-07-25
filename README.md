@@ -103,3 +103,13 @@ west build -b native_posix .
 - Developed on Windows 11 with WSL2 (Ubuntu 24.04)
 - Runs on native POSIX simulator (no hardware required)
 - Portable to any Zephyr-supported board with UART (STM32, nRF52840)
+
+## Hardware Validation
+
+In addition to native_sim, this project has been validated against an emulated
+nRF52840 target using [Renode](https://renode.io/). To run:
+
+```bash
+west build -p auto -b nrf52840dk/nrf52840 -d build_renode
+renode renode/modbus_slave.resc
+```
