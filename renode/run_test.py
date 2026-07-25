@@ -4,7 +4,8 @@ import sys
 import os
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-RESC_FILE = os.path.join(SCRIPT_DIR, "modbus_slave_test.resc")
+TEMPLATE_FILE = os.path.join(SCRIPT_DIR, "modbus_slave_test.resc")
+GENERATED_FILE = os.path.join(SCRIPT_DIR, "_generated_test.resc")
 UART_LOG = os.path.join(SCRIPT_DIR, "uart_output.log")
 
 EXPECTED_LINES = [
@@ -17,13 +18,22 @@ def main():
     if os.path.exists(UART_LOG):
         os.remove(UART_LOG)
 
+    with open(TEMPLATE_FILE, "r") as f:
+        template = f.read()
+    generated = template.replace("UART_LOG_PLACEHOLDER", UART_LOG)
+    with open(GENERATED_FILE, "w") as f:
+        f.write(generated)
+
     print("Running Renode emulation...")
     result = subprocess.run(
-        ["renode", "--disable-xwt", "--console", RESC_FILE],
+        ["renode", "--console", GENERATED_FILE],
         capture_output=True,
         text=True,
         timeout=60,
+        cwd=SCRIPT_DIR,
     )
+
+    os.remove(GENERATED_FILE)
 
     if not os.path.exists(UART_LOG):
         print("FAIL: UART log file was not created.")

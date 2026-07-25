@@ -1,7 +1,7 @@
 :name: ModbusSlave-nRF52840-Test
 
-$bin = @/home/mariem/zephyrproject/zephyr-modbus-slave/build_renode/zephyr/zephyr.elf
-$uart_log = @/home/mariem/zephyrproject/zephyr-modbus-slave/renode/uart_output.log
+$bin = @../build_renode/zephyr/zephyr.elf
+$uart_log = @UART_LOG_PLACEHOLDER
 
 mach create
 machine LoadPlatformDescription @platforms/boards/nrf52840dk_nrf52840.repl
