@@ -1,0 +1,14 @@
+:name: ModbusSlave-nRF52840-Test
+
+$bin = @/home/mariem/zephyrproject/zephyr-modbus-slave/build_renode/zephyr/zephyr.elf
+$uart_log = @/home/mariem/zephyrproject/zephyr-modbus-slave/renode/uart_output.log
+
+mach create
+machine LoadPlatformDescription @platforms/boards/nrf52840dk_nrf52840.repl
+sysbus LoadELF $bin
+
+sysbus.uart0 CreateFileBackend $uart_log true
+
+emulation RunFor "00:00:10"
+
+quit
