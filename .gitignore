@@ -1,2 +1,4 @@
 build/
 renode/uart_output.log
+build_renode/
+renode/uart_output.log*

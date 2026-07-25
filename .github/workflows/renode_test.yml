@@ -1,0 +1,36 @@
+name: Renode Hardware Validation
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    container:
+      image: zephyrprojectrtos/ci:latest
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v4
+
+      - name: Initialize west workspace
+        run: |
+          west init -l . || true
+          west update
+
+      - name: Build for nRF52840
+        run: |
+          west build -p auto -b nrf52840dk/nrf52840 -d build_renode
+
+      - name: Install Renode (portable)
+        run: |
+          wget -q https://builds.renode.io/renode-latest.linux-portable.tar.gz
+          mkdir renode_portable
+          tar xf renode-latest.linux-portable.tar.gz -C renode_portable --strip-components=1
+          echo "$GITHUB_WORKSPACE/renode_portable" >> $GITHUB_PATH
+
+      - name: Run automated Renode test
+        run: |
+          python3 renode/run_test.py

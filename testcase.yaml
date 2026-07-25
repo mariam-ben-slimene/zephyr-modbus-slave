@@ -1,0 +1,7 @@
+tests:
+  modbus_slave.renode:
+    build_only: false
+    platform_allow: nrf52840dk/nrf52840
+    harness: robot
+    harness_config:
+      robot_testsuite: renode/modbus_slave.robot
