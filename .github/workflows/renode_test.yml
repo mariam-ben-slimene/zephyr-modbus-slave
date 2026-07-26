@@ -24,16 +24,18 @@ jobs:
           ref: v3.7.0
           path: zephyr
 
+      - name: Initialize west workspace and fetch modules
+        run: |
+          west init -l zephyr
+          west update
+
       - name: Install Zephyr Python dependencies
         run: |
           pip install -r zephyr/scripts/requirements.txt
 
       - name: Build for nRF52840
-        working-directory: app
         run: |
-          west build -p auto -b nrf52840dk/nrf52840 -d build_renode
-        env:
-          ZEPHYR_BASE: ${{ github.workspace }}/zephyr
+          west build -p auto -s app -b nrf52840dk/nrf52840 -d build_renode
 
       - name: Install Renode (portable)
         run: |
