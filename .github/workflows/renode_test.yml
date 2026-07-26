@@ -14,15 +14,26 @@ jobs:
     steps:
       - name: Checkout project
         uses: actions/checkout@v4
+        with:
+          path: app
 
-      - name: Initialize west workspace
+      - name: Checkout Zephyr
+        uses: actions/checkout@v4
+        with:
+          repository: zephyrproject-rtos/zephyr
+          ref: v3.7.0
+          path: zephyr
+
+      - name: Install Zephyr Python dependencies
         run: |
-          west init -l . || true
-          west update
+          pip install -r zephyr/scripts/requirements.txt
 
       - name: Build for nRF52840
+        working-directory: app
         run: |
           west build -p auto -b nrf52840dk/nrf52840 -d build_renode
+        env:
+          ZEPHYR_BASE: ${{ github.workspace }}/zephyr
 
       - name: Install Renode (portable)
         run: |
@@ -32,5 +43,6 @@ jobs:
           echo "$GITHUB_WORKSPACE/renode_portable" >> $GITHUB_PATH
 
       - name: Run automated Renode test
+        working-directory: app
         run: |
           python3 renode/run_test.py
