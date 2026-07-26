@@ -113,3 +113,20 @@ nRF52840 target using [Renode](https://renode.io/). To run:
 west build -p auto -b nrf52840dk/nrf52840 -d build_renode
 renode renode/modbus_slave.resc
 ```
+
+## Continuous Integration & Hardware Emulation
+
+This project includes automated CI (GitHub Actions) that, on every push:
+1. Builds the firmware for a real hardware target (Nordic nRF52840 DK)
+2. Emulates that target using [Renode](https://renode.io/)
+3. Runs an automated test asserting correct Modbus FC03/FC06 transaction behavior
+4. Fails the build if the firmware's UART output doesn't match expected behavior
+
+This validates the firmware against real hardware behavior (memory map, peripherals,
+timing) rather than relying solely on the native POSIX simulator.
+
+To run the same test locally:
+\`\`\`bash
+west build -p auto -b nrf52840dk/nrf52840 -d build_renode
+python3 renode/run_test.py
+\`\`\`
