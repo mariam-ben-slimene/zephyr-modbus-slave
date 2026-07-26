@@ -11,6 +11,8 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: zephyrprojectrtos/ci:v0.26-branch
+    env:
+      CMAKE_PREFIX_PATH: /opt/toolchains
     steps:
       - name: Checkout project
         uses: actions/checkout@v4
